@@ -1,0 +1,4058 @@
+{
+	"info": {
+		"_postman_id": "4b40de03-8283-41f5-abe4-c6c3360c59a5",
+		"name": "Production Management API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28180806",
+		"_collection_link": "https://blue-spaceship-795410.postman.co/workspace/Production-Management-Team~29c65c8b-b633-4a91-bffd-bb0ad16dae7f/collection/28180806-4b40de03-8283-41f5-abe4-c6c3360c59a5?action=share&creator=28180806&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Process Integration Test",
+			"item": [
+				{
+					"name": "Set Up",
+					"item": [
+						{
+							"name": "Set Up Roles",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();\r",
+													"pm.test(\"Login successfully\", ()=> {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Get access token successfully\", ()=> {\r",
+													"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+													"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+													"})\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+													"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/api/v1/auth/login",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Manager Role",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set (\"roleNameWillCreate\", `Manager`);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var roleNameWillCreate = pm.collectionVariables.get(\"roleNameWillCreate\");\r",
+													"\r",
+													"pm.test(\"Create role succesfully or role existed\", () => {\r",
+													"    pm.expect([201, 409]).to.include(pm.response.code)\r",
+													"});\r",
+													"\r",
+													"if(pm.response.code == 201){\r",
+													"    pm.test(\"Input role and added role must have the same name\", () => {\r",
+													"        var response = pm.response.json();\r",
+													"        pm.expect(response).to.have.ownProperty('name');\r",
+													"        pm.expect(response.name).to.be.equal(roleNameWillCreate);\r",
+													"    })\r",
+													"}\r",
+													"\r",
+													"pm.collectionVariables.set(\"roleNameWillUpdate\", roleNameWillCreate);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"{{roleNameWillCreate}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/api/v1/roles",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"roles"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Developer Role",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set (\"roleNameWillCreate\", `Developer`);"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var roleNameWillCreate = pm.collectionVariables.get(\"roleNameWillCreate\");\r",
+													"\r",
+													"pm.test(\"Create role succesfully or role existed\", () => {\r",
+													"    pm.expect([201, 409]).to.include(pm.response.code)\r",
+													"});\r",
+													"\r",
+													"if(pm.response.code == 201){\r",
+													"    pm.test(\"Input role and added role must have the same name\", () => {\r",
+													"        var response = pm.response.json();\r",
+													"        pm.expect(response).to.have.ownProperty('name');\r",
+													"        pm.expect(response.name).to.be.equal(roleNameWillCreate);\r",
+													"    })\r",
+													"}\r",
+													"\r",
+													"pm.collectionVariables.set(\"roleNameWillUpdate\", roleNameWillCreate);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"{{roleNameWillCreate}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/api/v1/roles",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"roles"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Set Up Users",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();\r",
+													"pm.test(\"Login successfully\", ()=> {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Get access token successfully\", ()=> {\r",
+													"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+													"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+													"})\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+													"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/api/v1/auth/login",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add A New Manager User",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set(\"userNameWillCreate\", `manager${_.random(1, 1000)}`);\r",
+													"pm.collectionVariables.set(\"newUserRoles\", \"Manager\");"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var response = pm.response.json();\r",
+													"pm.test(\"Create a new user successfully\", () => {\r",
+													"    pm.response.to.have.status(201);\r",
+													"    pm.expect(response).to.have.ownProperty(\"id\");\r",
+													"\r",
+													"    pm.collectionVariables.set(\"userIdWillViewDetail\", response.id);\r",
+													"    pm.collectionVariables.set(\"managerUsername\", pm.collectionVariables.get(\"userNameWillCreate\"));\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"{{userNameWillCreate}}\",\r\n    \"email\": \"{{userNameWillCreate}}{{mailDomain}}\",\r\n    \"roles\": \"{{newUserRoles}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/api/v1/users",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add A New Developer User",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set(\"userNameWillCreate\", `developer${_.random(1, 100)}`);\r",
+													"pm.collectionVariables.set(\"newUserRoles\", \"Developer\");"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var response = pm.response.json();\r",
+													"pm.test(\"Create a new user successfully\", () => {\r",
+													"    pm.response.to.have.status(201);\r",
+													"    pm.expect(response).to.have.ownProperty(\"id\");\r",
+													"\r",
+													"    pm.collectionVariables.set(\"userIdWillViewDetail\", response.id);\r",
+													"    pm.collectionVariables.set(\"developerUsername\", pm.collectionVariables.get(\"userNameWillCreate\"));\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"{{userNameWillCreate}}\",\r\n    \"email\": \"{{userNameWillCreate}}{{mailDomain}}\",\r\n    \"roles\": \"{{newUserRoles}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/api/v1/users",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Test Scenario",
+					"item": [
+						{
+							"name": "Login With Admin Role",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();\r",
+													"pm.test(\"Login successfully\", ()=> {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Get access token successfully\", ()=> {\r",
+													"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+													"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+													"})\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+													"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/api/v1/auth/login",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add A Four-Steps Process",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Create a process successfully\", () => {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"pm.test(`Created process's task count must have id returned`, () => {\r",
+													"    pm.expect(response).to.have.ownProperty(\"id\");\r",
+													"    pm.expect(response.id).not.to.be.null;\r",
+													"    \r",
+													"    pm.collectionVariables.set(\"processIdWillView\", response.id);\r",
+													"    pm.collectionVariables.set(\"processIdWillUpdate\", response.id);\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"var requestBody = JSON.parse(pm.request.body.raw);\r",
+													"\r",
+													"pm.collectionVariables.set(\"CreatedProcessStepCount\", requestBody.taskGroups.length);\r",
+													"pm.collectionVariables.set(\"CreatedProcessTaskCount\", requestBody.taskGroups.map(step => step.tasks).flat().length);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"A test process with 4 steps\",\r\n  \"taskGroups\": [\r\n      {\r\n      \"tasks\": [\r\n        {\r\n          \"name\": \"Task 1.1 for admin\",\r\n          \"roleNames\": \"Admin\"\r\n        },\r\n        {\r\n          \"name\": \"Task 1.2 for developer\",\r\n          \"roleNames\": \"Admin,Developer\"\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"tasks\": [\r\n        {\r\n          \"name\": \"Task 2 for developer\",\r\n          \"roleNames\": \"Developer\"\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"tasks\": [\r\n        {\r\n          \"name\": \"Task 3 for manager\",\r\n          \"roleNames\": \"Manager\"\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"tasks\": [\r\n        {\r\n          \"name\": \"Task 4 for manager\",\r\n          \"roleNames\": \"Manager\"\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/api/v1/processes",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"processes"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get The Added Process",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var response = pm.response.json();\r",
+													"var stepCount = pm.collectionVariables.get(\"CreatedProcessStepCount\");\r",
+													"\r",
+													"pm.test(\"Get infomation of a process successfully\", () => {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(`Returned and requested process's id must be the same`, () => {\r",
+													"    pm.expect(response).to.have.ownProperty(\"id\");\r",
+													"    pm.expect(response.id).to.be.equal(pm.collectionVariables.get(\"processIdWillView\"));\r",
+													"});\r",
+													"\r",
+													"pm.test(`Total step of returned process must is the same as inputed is ${stepCount}`, () => {\r",
+													"    \r",
+													"    pm.expect(response).to.have.ownProperty(\"stepCount\");\r",
+													"    pm.expect(response).to.have.ownProperty(\"taskGroups\");\r",
+													"    pm.expect(response.stepCount).to.be.equal(stepCount);\r",
+													"    pm.expect(response.taskGroups).not.to.be.empty;\r",
+													"\r",
+													"    var tasksOfTheFirstStep = response.taskGroups[0].tasks;\r",
+													"    if(tasksOfTheFirstStep.length != 0){\r",
+													"        var processingTask = tasksOfTheFirstStep.find(task => task.viewStatus == \"Processing\");\r",
+													"        if(processingTask){\r",
+													"            pm.collectionVariables.set(\"taskIdWillUpdate\", processingTask.id);\r",
+													"        }\r",
+													"    }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/api/v1/processes/{{processIdWillView}}",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"processes",
+												"{{processIdWillView}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Mark A Task As Completed",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Mark a task as completed successfully\", () => {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/api/v1/tasks/{{taskIdWillUpdate}}/complete",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"tasks",
+												"{{taskIdWillUpdate}}",
+												"complete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get The Process After Update",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var response = pm.response.json();\r",
+													"var stepCount = pm.collectionVariables.get(\"CreatedProcessStepCount\");\r",
+													"\r",
+													"pm.test(\"Get infomation of a process successfully\", () => {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(`Returned and requested process's id must be the same`, () => {\r",
+													"    pm.expect(response).to.have.ownProperty(\"id\");\r",
+													"    pm.expect(response.id).to.be.equal(pm.collectionVariables.get(\"processIdWillView\"));\r",
+													"});\r",
+													"\r",
+													"pm.test(`Total step of returned process must is the same as inputed is ${stepCount}`, () => {\r",
+													"    \r",
+													"    pm.expect(response).to.have.ownProperty(\"stepCount\");\r",
+													"    pm.expect(response).to.have.ownProperty(\"taskGroups\");\r",
+													"    pm.expect(response.stepCount).to.be.equal(stepCount);\r",
+													"    pm.expect(response.taskGroups).not.to.be.empty;\r",
+													"\r",
+													"    var tasksOfTheFirstStep = response.taskGroups[0].tasks;\r",
+													"    if(tasksOfTheFirstStep.length != 0){\r",
+													"        var processingTask = tasksOfTheFirstStep.find(task => task.viewStatus == \"Processing\");\r",
+													"        if(processingTask){\r",
+													"            pm.collectionVariables.set(\"taskIdWillUpdate\", processingTask.id);\r",
+													"        }\r",
+													"    }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/api/v1/processes/{{processIdWillView}}",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"processes",
+												"{{processIdWillView}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Assign A Task To Manager Role",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Assign a task to other roles successfully\", () => {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"newRoleNames\": \"manager\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/api/v1/tasks/{{taskIdWillUpdate}}/reassign",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"tasks",
+												"{{taskIdWillUpdate}}",
+												"reassign"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Login With Manager Role",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();\r",
+													"pm.test(\"Login successfully\", ()=> {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Get access token successfully\", ()=> {\r",
+													"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+													"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+													"})\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set(\"usernameWillLogin\", pm.collectionVariables.get(\"managerUsername\"));\r",
+													"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"defaultPassword\"));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/api/v1/auth/login",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get List Processes",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Get list processes succesfully\", () => {\r",
+													"    pm.response.to.be.ok\r",
+													"});\r",
+													"\r",
+													"pm.test(\"List processes must not be empty\", () => {\r",
+													"    pm.expect(response).not.to.be.empty;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"List processes must include a process created before\", () => {\r",
+													"    var createdProcess = response.find(process => process.id == pm.collectionVariables.get(\"processIdWillView\"))\r",
+													"    pm.expect(createdProcess).not.to.be.null;\r",
+													"    pm.expect(createdProcess.totalTask).to.be.equal(pm.collectionVariables.get(\"CreatedProcessTaskCount\"));\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/api/v1/processes",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"processes"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Info Of A Process",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var response = pm.response.json();\r",
+													"var stepCount = pm.collectionVariables.get(\"CreatedProcessStepCount\");\r",
+													"\r",
+													"pm.test(\"Get infomation of a process successfully\", () => {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(`Returned and requested process's id must be the same`, () => {\r",
+													"    pm.expect(response).to.have.ownProperty(\"id\");\r",
+													"    \r",
+													"    var tasksOfTheFirstStep = response.taskGroups[0].tasks;\r",
+													"    if(tasksOfTheFirstStep.length != 0){\r",
+													"        var processingTask = tasksOfTheFirstStep.find(task => task.viewStatus == \"Processing\");\r",
+													"        if(processingTask){\r",
+													"            pm.collectionVariables.set(\"taskIdWillUpdate\", processingTask.id);\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													"\r",
+													"var currentStep = response.currentStep;\r",
+													"pm.test(`Current step must associate with number of step returned is: ${currentStep}`, () => {\r",
+													"    var result = response.taskGroups.length == currentStep;\r",
+													"    pm.expect(result).to.be.true;\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/api/v1/processes/{{processIdWillView}}",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"processes",
+												"{{processIdWillView}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Mark A Task As Completed",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Mark a task as completed successfully\", () => {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/api/v1/tasks/{{taskIdWillUpdate}}/complete",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"tasks",
+												"{{taskIdWillUpdate}}",
+												"complete"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Login With Developer Role",
+							"item": [
+								{
+									"name": "Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var jsonData = pm.response.json();\r",
+													"pm.test(\"Login successfully\", ()=> {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Get access token successfully\", ()=> {\r",
+													"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+													"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+													"})\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.set(\"usernameWillLogin\", pm.collectionVariables.get(\"developerUsername\"));\r",
+													"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"defaultPassword\"));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/api/v1/auth/login",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"auth",
+												"login"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Info Of A Process",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var response = pm.response.json();\r",
+													"var stepCount = pm.collectionVariables.get(\"CreatedProcessStepCount\");\r",
+													"\r",
+													"pm.test(\"Get infomation of a process successfully\", () => {\r",
+													"    pm.response.to.be.ok;\r",
+													"});\r",
+													"\r",
+													"pm.test(`Returned and requested process's id must be the same`, () => {\r",
+													"    pm.expect(response).to.have.ownProperty(\"id\");\r",
+													"    pm.expect(response.id).to.be.equal(pm.collectionVariables.get(\"processIdWillView\"));\r",
+													"\r",
+													"    var tasks = response.taskGroups.map(group => group.tasks).flat();\r",
+													"    if(tasks.length != 0){\r",
+													"        var processingTask = tasks.find(task => task.viewStatus == \"Processing\");\r",
+													"        if(processingTask){\r",
+													"            pm.collectionVariables.set(\"taskIdWillUpdate\", processingTask.id);\r",
+													"        }\r",
+													"    }\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/api/v1/processes/{{processIdWillView}}",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"processes",
+												"{{processIdWillView}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Mark A Task As Completed",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Mark a task as completed successfully\", () => {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/api/v1/tasks/{{taskIdWillUpdate}}/complete",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"tasks",
+												"{{taskIdWillUpdate}}",
+												"complete"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Check Public Web API Config",
+			"item": [
+				{
+					"name": "Check Web API",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Web API works well\", () => {\r",
+									"    pm.response.to.be.ok;\r",
+									"\r",
+									"    pm.environment.set(\"mailDomain\", pm.response.json().mailDomain)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}",
+							"host": [
+								"{{baseURL}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Check Web API",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{basURL}}",
+									"host": [
+										"{{basURL}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 11 Jul 2023 08:36:14 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "api-supported-versions",
+									"value": "1.0"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"apiUrl\": \"https://localhost:7216/api\",\n    \"mailDomain\": \"@gmail.com.vn\",\n    \"allowedApiVersions\": [\n        \"1.0\",\n        \"2.0\"\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Get Migration",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Migration History",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.test(\"Get migration histories successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Migration Histories is not empty\", ()=> {\r",
+									"    pm.expect(response).to.be.not.empty\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/migrations",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"migrations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get Audit Log",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Audit Log",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.test(\"Get audit log successfully\", () => {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Audit log must not be empty\", () => {\r",
+									"    pm.expect(response.items).not.to.be.empty;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/audit",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"audit"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Add A  Role With Existed Role's Name",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add A Duplicated Role",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set (\"roleNameWillCreate\", `admin`);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var roleNameWillCreate = pm.collectionVariables.get(\"roleNameWillCreate\");\r",
+									"\r",
+									"pm.test(\"Create role must be failed\", () => {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{roleNameWillCreate}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/roles",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Add An User With Invalid Info",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Duplicated Username",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"userNameWillCreate\", `admin`);\r",
+									"pm.collectionVariables.set(\"newUserRoles\", \"admin\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.test(\"Create a new user must be failed\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{userNameWillCreate}}\",\r\n    \"email\": \"{{userNameWillCreate}}{{mailDomain}}\",\r\n    \"roles\": \"{{newUserRoles}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Initial Password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"userNameWillCreate\", `user${_.random(1, 1000)}`);\r",
+									"pm.collectionVariables.set(\"newUserRoles\", \"admin\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.test(\"Create a new user must be failed\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{userNameWillCreate}}\",\r\n    \"email\": \"{{userNameWillCreate}}{{mailDomain}}\",\r\n    \"roles\": \"{{newUserRoles}}\",\r\n    \"newPassword\": \"123345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role Does Not Exist",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"userNameWillCreate\", `user${_.random(1, 1000)}`);\r",
+									"pm.collectionVariables.set(\"newUserRoles\", \"notExistedRole\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.test(\"Create a new user must be failed\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{userNameWillCreate}}\",\r\n    \"email\": \"{{userNameWillCreate}}{{mailDomain}}\",\r\n    \"roles\": \"{{newUserRoles}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Add Unvalid Process",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add A Process Having No Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Create a process must be fail\", () => {\r",
+									"    pm.response.to.be.badRequest;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var requestBody = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"pm.collectionVariables.set(\"CreatedProcessStepCount\", requestBody.taskGroups.length);\r",
+									"pm.collectionVariables.set(\"CreatedProcessTaskCount\", requestBody.taskGroups.map(step => step.tasks).flat().length);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Test process with no task\",\r\n  \"taskGroups\": [\r\n      {\r\n      \"tasks\": []\r\n    },\r\n    {\r\n      \"tasks\": []\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/processes",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"processes"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Add A Process Having No Task",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Test process with no task\",\r\n  \"taskGroups\": [\r\n      {\r\n      \"tasks\": []\r\n    },\r\n    {\r\n      \"tasks\": []\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basURL}}/api/v1/processes",
+									"host": [
+										"{{basURL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"processes"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 13 Jul 2023 09:06:22 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "api-supported-versions",
+									"value": "1.0"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"StatusCode\": 400,\n    \"Message\": \"The process must have at leasr one task\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Get List Of Users",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Paged List Users Filtered By Role",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"pageNumber\", 1);\r",
+									"pm.collectionVariables.set(\"pageSize\", 10);\r",
+									"pm.collectionVariables.set(\"roleWillFilter\", \"Manager\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.test(\"Get list user successfully\", () => {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response page number and page size must be the same as requested one\", () => {\r",
+									"    pm.expect(response.pageSize).to.be.equal(pm.collectionVariables.get(\"pageSize\"))\r",
+									"    pm.expect(response.currentPage).to.be.equal(pm.collectionVariables.get(\"pageNumber\"))\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users?page={{pageNumber}}&limit={{pageSize}}&role={{roleWillFilter}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "{{pageNumber}}"
+								},
+								{
+									"key": "limit",
+									"value": "{{pageSize}}"
+								},
+								{
+									"key": "role",
+									"value": "{{roleWillFilter}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Paged List Users Filtered By Role",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{basURL}}/api/v1/users?page={{pageNumber}}&limit={{pageSize}}&role={{roleWillFilter}}",
+									"host": [
+										"{{basURL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "{{pageNumber}}"
+										},
+										{
+											"key": "limit",
+											"value": "{{pageSize}}"
+										},
+										{
+											"key": "role",
+											"value": "{{roleWillFilter}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 13 Jul 2023 07:56:29 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "api-supported-versions",
+									"value": "1.0"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"pageSize\": 10,\n    \"currentPage\": 1,\n    \"totalItems\": 5,\n    \"totalPages\": 1,\n    \"items\": [\n        {\n            \"id\": \"363cb88d-1493-494c-a853-deb55067a62d\",\n            \"name\": \"manager51\",\n            \"userName\": \"manager51\",\n            \"roles\": \"\",\n            \"isDisabled\": false,\n            \"email\": \"manager51@gmail.com\",\n            \"createdDate\": \"2023-07-13T11:40:15.962926\",\n            \"modifiedDate\": \"2023-07-13T11:40:15.9629261\"\n        },\n        {\n            \"id\": \"77349344-fe57-4fe1-b043-f09e86c98c3e\",\n            \"name\": \"Updated Name\",\n            \"userName\": \"tester23\",\n            \"roles\": \"\",\n            \"isDisabled\": true,\n            \"email\": \"tester23@gmail.com\",\n            \"createdDate\": \"2023-07-13T13:47:42.4021248\",\n            \"modifiedDate\": \"2023-07-13T14:41:25.8315858\"\n        },\n        {\n            \"id\": \"8fbed83f-4ec7-488d-9fee-1a9ee4dd4475\",\n            \"name\": \"manager\",\n            \"userName\": \"manager\",\n            \"roles\": \"\",\n            \"isDisabled\": false,\n            \"email\": \"manager@gmail.com\",\n            \"createdDate\": \"2023-07-13T10:41:08.3326705\",\n            \"modifiedDate\": \"2023-07-13T10:41:08.3326706\"\n        },\n        {\n            \"id\": \"9bd3b82c-c853-44de-8c11-85d9243153ed\",\n            \"name\": \"manager22\",\n            \"userName\": \"manager22\",\n            \"roles\": \"\",\n            \"isDisabled\": false,\n            \"email\": \"manager22@gmail.com\",\n            \"createdDate\": \"2023-07-13T11:48:07.645491\",\n            \"modifiedDate\": \"2023-07-13T11:48:07.645491\"\n        },\n        {\n            \"id\": \"c12ec653-2585-44ed-9514-2a30b21dc470\",\n            \"name\": \"manager1\",\n            \"userName\": \"manager1\",\n            \"roles\": \"\",\n            \"isDisabled\": false,\n            \"email\": \"manager1@gmail.com\",\n            \"createdDate\": \"2023-07-13T13:47:42.0028887\",\n            \"modifiedDate\": \"2023-07-13T13:47:42.0028887\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Paged List Users Filtered By Search String",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"pageNumber\", 1);\r",
+									"pm.collectionVariables.set(\"pageSize\", 10);\r",
+									"pm.collectionVariables.set(\"searchString\", \"manager\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.test(\"Get list users successfully\", () => {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response page number and page size must be the same as requested one\", () => {\r",
+									"    pm.expect(response.pageSize).to.be.equal(pm.collectionVariables.get(\"pageSize\"))\r",
+									"    pm.expect(response.currentPage).to.be.equal(pm.collectionVariables.get(\"pageNumber\"))\r",
+									"});\r",
+									"\r",
+									"var searchString = pm.collectionVariables.get(\"searchString\");\r",
+									"pm.test(`Each user has either name or username or email includes the string: ${searchString}`, () => {\r",
+									"    var result = response.items.every(user => \r",
+									"        user.name.includes(searchString) ||\r",
+									"        user.userName.includes(searchString) ||\r",
+									"        user.email.includes(searchString));\r",
+									"    pm.expect(result).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users?page={{pageNumber}}&limit={{pageSize}}&searchString={{searchString}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "{{pageNumber}}"
+								},
+								{
+									"key": "limit",
+									"value": "{{pageSize}}"
+								},
+								{
+									"key": "searchString",
+									"value": "{{searchString}}"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Paged List Users Filtered By Search String",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{basURL}}/api/v1/users?page={{pageNumber}}&limit={{pageSize}}&searchString={{searchString}}",
+									"host": [
+										"{{basURL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "{{pageNumber}}"
+										},
+										{
+											"key": "limit",
+											"value": "{{pageSize}}"
+										},
+										{
+											"key": "searchString",
+											"value": "{{searchString}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 13 Jul 2023 08:06:55 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "api-supported-versions",
+									"value": "1.0"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"pageSize\": 10,\n    \"currentPage\": 1,\n    \"totalItems\": 4,\n    \"totalPages\": 1,\n    \"items\": [\n        {\n            \"id\": \"363cb88d-1493-494c-a853-deb55067a62d\",\n            \"name\": \"manager51\",\n            \"userName\": \"manager51\",\n            \"roles\": \"\",\n            \"isDisabled\": false,\n            \"email\": \"manager51@gmail.com\",\n            \"createdDate\": \"2023-07-13T11:40:15.962926\",\n            \"modifiedDate\": \"2023-07-13T11:40:15.9629261\"\n        },\n        {\n            \"id\": \"8fbed83f-4ec7-488d-9fee-1a9ee4dd4475\",\n            \"name\": \"manager\",\n            \"userName\": \"manager\",\n            \"roles\": \"\",\n            \"isDisabled\": false,\n            \"email\": \"manager@gmail.com\",\n            \"createdDate\": \"2023-07-13T10:41:08.3326705\",\n            \"modifiedDate\": \"2023-07-13T10:41:08.3326706\"\n        },\n        {\n            \"id\": \"9bd3b82c-c853-44de-8c11-85d9243153ed\",\n            \"name\": \"manager22\",\n            \"userName\": \"manager22\",\n            \"roles\": \"\",\n            \"isDisabled\": false,\n            \"email\": \"manager22@gmail.com\",\n            \"createdDate\": \"2023-07-13T11:48:07.645491\",\n            \"modifiedDate\": \"2023-07-13T11:48:07.645491\"\n        },\n        {\n            \"id\": \"c12ec653-2585-44ed-9514-2a30b21dc470\",\n            \"name\": \"manager1\",\n            \"userName\": \"manager1\",\n            \"roles\": \"\",\n            \"isDisabled\": false,\n            \"email\": \"manager1@gmail.com\",\n            \"createdDate\": \"2023-07-13T13:47:42.0028887\",\n            \"modifiedDate\": \"2023-07-13T13:47:42.0028887\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Get List Of Users With Invalid Param",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List Users With PageNumb is -1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"pageNumber\", -1);\r",
+									"pm.collectionVariables.set(\"pageSize\", -1);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"var pageNumber = pm.collectionVariables.get(\"pageNumber\");\r",
+									"var pageSize = pm.collectionVariables.get(\"pageSize\");\r",
+									"\r",
+									"pm.test(`Get list user successfully: page number ${pageNumber} and page size ${pageSize}`, () => {\r",
+									"    pm.response.to.be.ok\r",
+									"});\r",
+									"\r",
+									"pm.test('List users can not be empty', () => {\r",
+									"    pm.expect(response).to.have.ownProperty(\"items\");\r",
+									"    pm.expect(response.items).not.to.be.empty;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users?page={{pageNumber}}&limit={{pageSize}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "{{pageNumber}}"
+								},
+								{
+									"key": "limit",
+									"value": "{{pageSize}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get Info Of An User Does Not Exist",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get  Info Of A User Does Not Exist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Get info of the user must be failed\", () => {\r",
+									"    pm.response.to.have.status(404)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"userIdWillViewDetail\", \"0e637844-7e01-0000-865b-3e0b8b4c1000\")"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users/{{userIdWillViewDetail}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{userIdWillViewDetail}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete Roles",
+			"item": [
+				{
+					"name": "Login Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add A New Role",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set (\"roleNameWillCreate\", `role_${_.random(1,99)}`);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var roleNameWillCreate = pm.collectionVariables.get(\"roleNameWillCreate\");\r",
+									"\r",
+									"pm.test(\"Create role succesfully\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(`Inputed role and added role must have the same name: ${roleNameWillCreate}`, () => {\r",
+									"    var response = pm.response.json();\r",
+									"    pm.expect(response).to.have.ownProperty('name');\r",
+									"    pm.expect(response.name).to.be.equal(roleNameWillCreate);\r",
+									"})\r",
+									"\r",
+									"pm.collectionVariables.set(\"roleNameWillDelete\", roleNameWillCreate);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{roleNameWillCreate}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/roles",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete The Added Role",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Delete a role successfully\", () => {\r",
+									"    pm.response.to.have.status(204)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/roles/{{roleNameWillDelete}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"{{roleNameWillDelete}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete A Role Does Not Exist",
+			"item": [
+				{
+					"name": "Delete A Role Not Exist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Cannot delete a role not exist\", () => {\r",
+									"    pm.response.to.be.notFound;\r",
+									"    pm.expect(pm.response.json().StatusCode).to.be.equal(404);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"roleNameWillDelete\", `notExistedRole_${_.random(99,199)}`)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/roles/{{roleNameWillDelete}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"{{roleNameWillDelete}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update Name Of A Role Does Not Exist",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update A Role Not Exist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(`Update new name for role ${pm.collectionVariables.get(\"roleNameWillUpdate\")} must be fail`, () => {\r",
+									"    pm.response.to.be.notFound\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"roleNameWillUpdate\", `notExistedRole_${_.random(99,199)}`)\r",
+									"pm.collectionVariables.set(\"newRoleName\", `${pm.collectionVariables.get(\"roleNameWillUpdate\")}_updated`)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{newRoleName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/roles/{{roleNameWillUpdate}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"{{roleNameWillUpdate}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update A User With Invalid Info",
+			"item": [
+				{
+					"name": "Login",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();\r",
+											"pm.test(\"Login successfully\", ()=> {\r",
+											"    pm.response.to.be.ok;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Get access token successfully\", ()=> {\r",
+											"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+											"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+											"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/v1/auth/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Add A New User",
+					"item": [
+						{
+							"name": "Add A New User",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"userNameWillCreate\", `user${_.random(1, 1000)}`);\r",
+											"pm.collectionVariables.set(\"newUserRoles\", \"Admin\");"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var response = pm.response.json();\r",
+											"pm.test(\"Create a new user successfully\", () => {\r",
+											"    pm.response.to.have.status(201);\r",
+											"    pm.expect(response).to.have.ownProperty(\"id\");\r",
+											"\r",
+											"    pm.collectionVariables.set(\"userIdWillUpdate\", response.id);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"{{userNameWillCreate}}\",\r\n    \"email\": \"{{userNameWillCreate}}{{mailDomain}}\",\r\n    \"roles\": \"{{newUserRoles}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/v1/users",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Add A New User With Role Admin",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"{{userNameWillCreate}}\",\r\n    \"email\": \"{{userNameWillCreate}}@gmail.com\",\r\n    \"role\": \"Admin\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{basURL}}/api/v1/users",
+											"host": [
+												"{{basURL}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 11 Jul 2023 10:48:34 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "api-supported-versions",
+											"value": "1.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"cf7e07a1-2e7f-486f-b600-e51144c753cb\",\n    \"name\": \"user9\",\n    \"userName\": \"user9\",\n    \"isDisabled\": false,\n    \"email\": \"user9@gmail.com\",\n    \"createdDate\": \"2023-07-11T17:48:34.233161+07:00\",\n    \"updatedDate\": null\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "User's Name Exceed Length Limit",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(`Update user information must be failed`, () => {\r",
+									"    pm.response.to.have.status(400)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Updated Name 27874871724871924789174981749791734791749794717497194791728748729147974987128749817497974897198734972984792879481734979127849271784797294798317284787129479817487127497287489172984798174938719847919479875070875016586105017926917912509712099581659162598598710238598028953691693921850982190589561501065901865398273471646497469718648127964786481972634981723469812468\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users/{{userIdWillUpdate}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{userIdWillUpdate}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update A User Information",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updated Name\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basURL}}/api/v1/users/{{userIdWillUpdate}}",
+									"host": [
+										"{{basURL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"{{userIdWillUpdate}}"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 13 Jul 2023 06:56:24 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "api-supported-versions",
+									"value": "1.0"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Update User's With Roles Are Not Exist",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"newUserRoles\", \"notExitedRole\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Update user's roles must be failed\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roles\":\"{{newUserRoles}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users/{{userIdWillUpdate}}/changeRoles",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{userIdWillUpdate}}",
+								"changeRoles"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update User's Roles",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"roles\":\"{{newUserRoles}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basURL}}/api/v1/users/{{userIdWillUpdated}}/changeRoles",
+									"host": [
+										"{{basURL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"{{userIdWillUpdated}}",
+										"changeRoles"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 11 Jul 2023 13:50:46 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "api-supported-versions",
+									"value": "1.0"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Update Role Name",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add A New Role",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set (\"roleNameWillCreate\", `role_${_.random(1,99)}`);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var roleNameWillCreate = pm.collectionVariables.get(\"roleNameWillCreate\");\r",
+									"\r",
+									"pm.test(\"Create role succesfully\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(`Inputed role and added role must have the same name: ${roleNameWillCreate}`, () => {\r",
+									"    var response = pm.response.json();\r",
+									"    pm.expect(response).to.have.ownProperty('name');\r",
+									"    pm.expect(response.name).to.be.equal(roleNameWillCreate);\r",
+									"})\r",
+									"\r",
+									"pm.collectionVariables.set(\"roleNameWillUpdate\", roleNameWillCreate);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{roleNameWillCreate}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/roles",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update The Added Role Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(`Update new name for role ${pm.collectionVariables.get(\"roleNameWillUpdate\")} successfully`, () => {\r",
+									"    pm.response.to.have.status(204)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"newRoleName\", `${pm.collectionVariables.get(\"roleNameWillUpdate\")}_updated`)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{newRoleName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/roles/{{roleNameWillUpdate}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"{{roleNameWillUpdate}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List Roles After Updating",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Get list roles successfully\", () => {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"List role must not be empty\", () => {\r",
+									"    pm.expect(response).to.be.not.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(`List role must include ${ pm.collectionVariables.get(\"newRoleName\")}`, () => {\r",
+									"    var listRoles = response.map(role => role.name.toLowerCase());\r",
+									"    var result = listRoles.includes(pm.collectionVariables.get(\"newRoleName\"))\r",
+									"    pm.expect(result).to.be.true;\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/roles",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update User",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add A New User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"userNameWillCreate\", `user${_.random(1, 100)}`);\r",
+									"pm.collectionVariables.set(\"newUserRoles\", \"Admin\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.test(\"Create a new user successfully\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.expect(response).to.have.ownProperty(\"id\");\r",
+									"\r",
+									"    pm.collectionVariables.set(\"userIdWillUpdate\", response.id);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{userNameWillCreate}}\",\r\n    \"email\": \"{{userNameWillCreate}}{{mailDomain}}\",\r\n    \"roles\": \"{{newUserRoles}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Info Of The Last User Added",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(`Update user information successfully`, () => {\r",
+									"    pm.response.to.have.status(204)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Updated Name\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users/{{userIdWillUpdate}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{userIdWillUpdate}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update A User Information",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updated Name\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{basURL}}/api/v1/users/{{userIdWillUpdate}}",
+									"host": [
+										"{{basURL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"{{userIdWillUpdate}}"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 13 Jul 2023 06:56:24 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "api-supported-versions",
+									"value": "1.0"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Update User's Roles",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"newUserRoles\", \"Admin\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Update user's roles successfully\", () => {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roles\":\"{{newUserRoles}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users/{{userIdWillUpdate}}/changeRoles",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{userIdWillUpdate}}",
+								"changeRoles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Disable A User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Disable a user successfully\", () => {\r",
+									"    pm.response.to.have.status(204);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users/{{userIdWillUpdate}}/disable",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{userIdWillUpdate}}",
+								"disable"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Info After Updated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Get a user successfully\", () => {\r",
+									"    pm.response.to.be.ok\r",
+									"    pm.expect(response).to.have.ownProperty(\"id\");\r",
+									"    pm.expect(response.id).to.be.equal(pm.collectionVariables.get(\"userIdWillViewDetail\"))\r",
+									"})\r",
+									"\r",
+									"var listInputRoles = pm.collectionVariables.get(\"newUserRoles\").split(',').map(role => role.toLowerCase());\r",
+									"pm.test(`User's role must be the same as: ${pm.collectionVariables.get(\"newUserRoles\")}`, () => {\r",
+									"    var listCreatedRoles = response.roles.split(',').map(role => role.toLowerCase());\r",
+									"    var result = listInputRoles.every(role => listCreatedRoles.includes(role));\r",
+									"\r",
+									"    pm.expect(response).to.have.ownProperty(\"roles\");\r",
+									"    pm.expect(result).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User status must be disabled\", () => {\r",
+									"    pm.expect(response).to.have.ownProperty(\"isDisabled\");\r",
+									"    pm.expect(response.isDisabled).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User have a valid modified date\", () => {\r",
+									"    pm.expect(response).to.have.ownProperty(\"modifiedDate\");\r",
+									"    pm.expect(response.modifiedDate).not.to.be.null;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"userIdWillViewDetail\", pm.collectionVariables.get(\"userIdWillUpdate\"))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/users/{{userIdWillViewDetail}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{userIdWillViewDetail}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update The Process",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Login successfully\", ()=> {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get access token successfully\", ()=> {\r",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"accessToken\");\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"usernameWillLogin\", \"admin\");\r",
+									"pm.collectionVariables.set(\"userPassword\", pm.environment.get(\"adminPassword\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{usernameWillLogin}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add A New Process",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Create a process successfully\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(`Created process's task count must have id returned`, () => {\r",
+									"    pm.expect(response).to.have.ownProperty(\"id\");\r",
+									"    pm.expect(response.id).not.to.be.null;\r",
+									"\r",
+									"    pm.collectionVariables.set(\"processIdWillUpdate\", response.id)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Test process with 2 steps\",\r\n  \"taskGroups\": [\r\n      {\r\n      \"tasks\": [\r\n        {\r\n          \"name\": \"Task 1.1 for Admin\",\r\n          \"roleNames\": \"Admin\"\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"tasks\": [\r\n        {\r\n          \"name\": \"Task 2 for admin\",\r\n          \"roleNames\": \"Admin\"\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/processes",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"processes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update The Process's Information",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Update process's infomatiom successfully\", () => {\r",
+									"    pm.response.to.have.status(204)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Updated process's name\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/processes/{{processIdWillUpdate}}/update",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"processes",
+								"{{processIdWillUpdate}}",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get The Updated Process's Info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"var stepCount = pm.collectionVariables.get(\"CreatedProcessStepCount\");\r",
+									"\r",
+									"pm.test(\"Get infomation of a process successfully\", () => {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"\r",
+									"pm.test(`Returned and requested process's id must be the same`, () => {\r",
+									"    pm.expect(response).to.have.ownProperty(\"id\");\r",
+									"    pm.expect(response.id).to.be.equal(pm.collectionVariables.get(\"processIdWillView\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/processes/{{processIdWillView}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"processes",
+								"{{processIdWillView}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "usernameWillLogin",
+			"value": ""
+		},
+		{
+			"key": "userPassword",
+			"value": ""
+		},
+		{
+			"key": "roleNameWillCreate",
+			"value": ""
+		},
+		{
+			"key": "roleNameWillUpdate",
+			"value": ""
+		},
+		{
+			"key": "newRoleName",
+			"value": ""
+		},
+		{
+			"key": "roleNameWillDelete",
+			"value": ""
+		},
+		{
+			"key": "userNameWillCreate",
+			"value": ""
+		},
+		{
+			"key": "newUserRoles",
+			"value": ""
+		},
+		{
+			"key": "userIdWillViewDetail",
+			"value": ""
+		},
+		{
+			"key": "managerUsername",
+			"value": ""
+		},
+		{
+			"key": "developerUsername",
+			"value": ""
+		},
+		{
+			"key": "testerUsername",
+			"value": ""
+		},
+		{
+			"key": "userIdWillUpdate",
+			"value": ""
+		},
+		{
+			"key": "pageNumber",
+			"value": ""
+		},
+		{
+			"key": "pageSize",
+			"value": ""
+		},
+		{
+			"key": "roleWillFilter",
+			"value": ""
+		},
+		{
+			"key": "searchString",
+			"value": ""
+		},
+		{
+			"key": "CreatedProcessStepCount",
+			"value": ""
+		},
+		{
+			"key": "CreatedProcessTaskCount",
+			"value": ""
+		},
+		{
+			"key": "processIdWillView",
+			"value": ""
+		},
+		{
+			"key": "processIdWillUpdate",
+			"value": ""
+		},
+		{
+			"key": "taskIdWillUpdate",
+			"value": ""
+		}
+	]
+}
